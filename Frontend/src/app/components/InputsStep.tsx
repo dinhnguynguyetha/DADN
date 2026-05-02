@@ -6,9 +6,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Button } from "./ui/button";
 import { useState } from "react";
 
-export function InputsStep() {
+interface InputsStepProps {
+  onNext?: () => void;
+}
+
+export function InputsStep({ onNext }: InputsStepProps) {
   const [applicationType, setApplicationType] = useState("conveyor");
   const [workingHours, setWorkingHours] = useState("8");
+
+  const handleNext = () => {
+    console.log("Saving data...", { applicationType, workingHours });
+    
+    if (onNext) {
+      onNext();
+    }
+  };
 
   return (
     <div className="flex-1 overflow-auto">
@@ -213,7 +225,10 @@ export function InputsStep() {
             <Button variant="outline">
               Đặt Lại
             </Button>
-            <Button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white">
+            <Button
+              className="bg-[#3B82F6] hover:bg-[#2563EB] text-white"
+              onClick={handleNext}
+            >
               Lưu & Tiếp Tục
             </Button>
           </div>

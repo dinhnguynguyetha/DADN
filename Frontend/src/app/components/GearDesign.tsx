@@ -10,7 +10,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { cn } from "./ui/utils";
 
-export function GearDesign() {
+interface GearDesignProps {
+  onNext?: () => void;
+  onBack?: () => void;
+}
+
+export function GearDesign({ onNext, onBack }: GearDesignProps) {
   const [materialOverride, setMaterialOverride] = useState(false);
   const [selectedMaterial, setSelectedMaterial] = useState("steel45");
   const [powerInput, setPowerInput] = useState("75");
@@ -298,6 +303,15 @@ export function GearDesign() {
               </CardContent>
             </Card>
           )}
+
+          <div className="flex justify-between pt-6">
+            <Button variant="outline" onClick={onBack}>
+              Quay Lại
+            </Button>
+            <Button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white" onClick={onNext}>
+              Xác Nhận & Tiếp Tục
+            </Button>
+          </div>
         </div>
       </div>
     </div>

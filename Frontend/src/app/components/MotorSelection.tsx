@@ -5,7 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { cn } from "./ui/utils";
 import { useState } from "react";
 
-export function MotorSelection() {
+interface MotorSelectionProps {
+  onNext?: () => void;
+  onBack?: () => void;
+}
+
+export function MotorSelection({ onNext, onBack }: MotorSelectionProps) {
   const [selectedMotor, setSelectedMotor] = useState(2);
 
   const motorOptions = [
@@ -214,14 +219,17 @@ export function MotorSelection() {
 
           {/* Action Buttons */}
           <div className="flex justify-between">
-            <Button variant="outline">
+            <Button variant="outline" onClick={onBack}>
               Quay Lại
             </Button>
             <div className="flex gap-3">
               <Button variant="outline">
                 So Sánh Chi Tiết
               </Button>
-              <Button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white">
+              <Button
+                className="bg-[#3B82F6] hover:bg-[#2563EB] text-white"
+                onClick={onNext}
+              >
                 Xác Nhận & Tiếp Tục
               </Button>
             </div>

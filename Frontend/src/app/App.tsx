@@ -1,51 +1,64 @@
-import { useState, useMemo } from "react";
-import { VerticalStepper } from "./components/VerticalStepper";
-import { InputsStep } from "./components/InputsStep";
-import { MotorSelection } from "./components/MotorSelection";
-import { GearDesign } from "./components/GearDesign";
-import { ShaftsBearings } from "./components/ShaftsBearings";
-import { ExportReports } from "./components/ExportReports";
+﻿import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
+import { Home } from "./pages/Home";
+import { WizardPage } from "./pages/WizardPage";
 
-export default function App() {
-  const [currentStep, setCurrentStep] = useState(1);
+function AppRoutes() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("mech_is_authenticated") === "true";
+  });
+  const navigate = useNavigate();
 
-  const steps = useMemo(() => [
-    { id: 1, label: "Nhập thông số", status: currentStep === 1 ? "current" as const : currentStep > 1 ? "completed" as const : "upcoming" as const },
-    { id: 2, label: "Chọn động cơ", status: currentStep === 2 ? "current" as const : currentStep > 2 ? "completed" as const : "upcoming" as const },
-    { id: 3, label: "Thiết kế bánh răng", status: currentStep === 3 ? "current" as const : currentStep > 3 ? "completed" as const : "upcoming" as const },
-    { id: 4, label: "Trục & Ổ bi", status: currentStep === 4 ? "current" as const : currentStep > 4 ? "completed" as const : "upcoming" as const },
-    { id: 5, label: "Xuất báo cáo", status: currentStep === 5 ? "current" as const : currentStep > 5 ? "completed" as const : "upcoming" as const },
-  ], [currentStep]);
+  useEffect(() => {
+    localStorage.setItem("mech_is_authenticated", isAuthenticated ? "true" : "false");
+  }, [isAuthenticated]);
 
-  const handleStepClick = (stepId: number) => {
-    setCurrentStep(stepId);
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    navigate("/home", { replace: true });
   };
 
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return <InputsStep />;
-      case 2:
-        return <MotorSelection />;
-      case 3:
-        return <GearDesign />;
-      case 4:
-        return <ShaftsBearings />;
-      case 5:
-        return <ExportReports />;
-      default:
-        return <InputsStep />;
-    }
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    navigate("/login", { replace: true });
+  };
+
+  const handleStart = () => {
+    navigate("/wizard");
   };
 
   return (
-    <div className="h-screen flex bg-[#F8FAFC]">
-      <VerticalStepper 
-        steps={steps} 
-        currentStep={currentStep}
-        onStepClick={handleStepClick}
+    <Routes>
+      <Route path="/" element={<Navigate to={isAuthenticated ? "/home" : "/login"} replace />} />
+      <Route path="/login" element={<Login onLogin={handleLogin} />} />
+      <Route path="/register" element={<Register />} />
+      <Route
+        path="/home"
+        element={
+          isAuthenticated ? (
+            <Home onStart={handleStart} onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
       />
-      {renderStepContent()}
-    </div>
+      <Route
+        path="/wizard"
+        element={
+          isAuthenticated ? <WizardPage /> : <Navigate to="/login" replace />
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }

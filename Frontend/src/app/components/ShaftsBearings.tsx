@@ -9,7 +9,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { cn } from "./ui/utils";
 import { useState } from "react";
 
-export function ShaftsBearings() {
+interface ShaftsBearingsProps {
+  onNext?: () => void;
+  onBack?: () => void;
+}
+
+export function ShaftsBearings({ onNext, onBack }: ShaftsBearingsProps) {
   const [calculated, setCalculated] = useState(false);
 
   const shaftResults = [
@@ -399,10 +404,10 @@ export function ShaftsBearings() {
 
         {/* Action Buttons */}
         <div className="flex justify-between pt-6">
-          <Button variant="outline">
+          <Button variant="outline" onClick={onBack}>
             Quay Lại
           </Button>
-          <Button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white">
+          <Button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white" onClick={onNext}>
             Xác Nhận & Tiếp Tục
           </Button>
         </div>

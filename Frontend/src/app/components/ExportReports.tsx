@@ -4,7 +4,11 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
 
-export function ExportReports() {
+interface ExportReportsProps {
+  onBack?: () => void;
+}
+
+export function ExportReports({ onBack }: ExportReportsProps) {
   const projectSummary = {
     name: "Băng tải sản xuất",
     designer: "Nguyễn Văn A",
@@ -251,7 +255,7 @@ export function ExportReports() {
 
           {/* Action Buttons */}
           <div className="flex justify-between items-center pt-6 border-t border-[#E2E8F0]">
-            <Button variant="outline">
+            <Button variant="outline" onClick={onBack}>
               Quay Lại
             </Button>
             <div className="flex gap-3">
